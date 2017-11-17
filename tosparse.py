@@ -24,4 +24,4 @@ for i in range(len(features)):#i is the index of the article
         j_id=np.append(j_id,currentj_id)
         data=np.append(data,currentdata)
 
-sp_features=scipy.sparse.coo_matrix((data,(i_id,j_id)),shape=(len(features),dictsize))
+sp_features=scipy.sparse.coo_matrix((data,(i_id,j_id)),shape=(len(features),dictsize)).todense()
