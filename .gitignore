@@ -1,0 +1,10 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ignore pycharm ide setting folder
+.idea
+
+# OS generated files
+*/.DS_Store
