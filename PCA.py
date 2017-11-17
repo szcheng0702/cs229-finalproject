@@ -8,7 +8,7 @@ features=np.array(([1,9,0],[0,2,1]))#test value, modified later
 
 numfeat=features.shape[1]
 numarticle=features.shape[0]
-Cov=np.cov(features)
+Cov=np.cov(features.T) ##take the covariance matrix for the features
 eval,evec=np.linalg.eig(Cov)
 
 ##find the first k principal components, where eval[k] is closest enough to zero
@@ -16,16 +16,17 @@ eval,evec=np.linalg.eig(Cov)
 #plt.show()
 
 ##
-k=2 #num of Principal components, modified later
+k=1 #num of Principal components, modified later
 ##
 
-evec_k=evec[1:k,:]
-mu=np.mean(features,axis=1)
+evec_k=evec[0:k,:]
+mu=np.mean(features,axis=0)
 feat_new=np.zeros([numarticle,k])
-for i in range(numfeat):
-    feat_new[i,:]=evec_k.T*(evec_k*(features[:,i]-mu))
+for i in range(numarticle):
+    feat_new[i,:]=np.dot(evec_k,(feat_new[i,:]-mu))
 
 #the new features matrix is called feat_new
+
 
 
 
