@@ -15,6 +15,7 @@ from utils.score import report_score, LABELS, score_submission
 
 from utils.system import parse_params, check_version
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import BernoulliNB
 
 
 def generate_features(stances, dataset, name):
@@ -30,7 +31,7 @@ def generate_features(stances, dataset, name):
     X_polarity = gen_or_load_feats(polarity_features, h, b, "features/polarity." + name + ".npy")
     X_hand = gen_or_load_feats(hand_features, h, b, "features/hand." + name + ".npy")
 
-    X = np.c_[X_hand]
+    X = np.c_[X_hand, X_polarity, X_refuting, X_overlap]
     return X, y
 
 
@@ -70,7 +71,7 @@ if __name__ == "__main__":
         y_test = ys[fold]
 
         # Linear
-        clf = MultinomialNB()
+        clf = BernoulliNB()
         clf.fit(X_train, y_train)
 
         predicted = [LABELS[int(a)] for a in clf.predict(X_test)]
