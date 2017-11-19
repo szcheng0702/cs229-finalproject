@@ -1,9 +1,10 @@
 import csv
 from word_stem import Stemmer
+from nltk.util import ngrams
 
 """
 Transfer the two separate body and stance data files into a list of tuples
-    Each tuple includes
+    Each tuple represents a headline-body-stance pair and includes
     Index 0: A list of preprocessed tokens in the headline
     Index 1: A list of preprocessed tokens in the body
     Index 2: Stance
@@ -96,6 +97,19 @@ class DataOrganizer:
             for row in reader:
                 id_headline_stance[row['Body ID']] = (row['Headline'], row['Stance'])
         return id_headline_stance
+
+    def token_to_ngrams(self, tokens, n):
+        """
+        Transfer a token list into a list of n-grams stirngs.
+        Note: The nltk ngrams method only transfer token list into a list of n-grams tuple which is
+        not accepted by gensim.dictionary
+        """
+        ngrams_tuple_list = ngrams(tokens, n)
+        ngrams_str_list = []
+        for tuple in ngrams_tuple_list:
+            ngrams_str_list.append(" ".join([t for t in tuple]))
+        return ngrams_str_list
+
 
 # test
 # do = DataOrganizer()

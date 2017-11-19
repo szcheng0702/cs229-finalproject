@@ -3,9 +3,9 @@ This repository contains stuff about CS 229 final project
 
 ## Features
 #### BOW(Bag-Of-Word) Features
-To generate BOW features
+To generate BOW features, run the following command in the terminal
 ```
-$ python Features/bow_features.py <body_raw_file> <headline_raw_file>
+$ python Features/token_features.py 1 <body_raw_file> <headline_raw_file>
 ``` 
 
 Output files are in the "Feature/BOW vectors" folder, includes:
@@ -36,3 +36,15 @@ To load a corpus:
 from gensim import corpora
 corpus = corpora.MmCorpus('filename')
 ```
+#### N-grams Features
+To generate N-grams features:  (n denotes the number of words in a token)
+```
+$ python Features/token_features.py n <body_raw_file> <headline_raw_file>
+``` 
+For example, to generate bigram features, run:
+```
+$ python Features/token_features.py 2 <body_raw_file> <headline_raw_file>
+``` 
+Output files will be in a folder called "$n$grams vectors". 
+
+Output files are the same as the BOW features
