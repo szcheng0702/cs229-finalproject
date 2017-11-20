@@ -110,26 +110,16 @@ def refuting_features(headlines, bodies):
     return X
 
 
-def polarity_features(headlines, bodies):
-    _refuting_words = [
-        'fake',
-        'fraud',
-        'hoax',
-        'false',
-        'deny', 'denies',
-        'not',
-        'despite',
-        'nope',
-        'doubt', 'doubts',
-        'bogus',
-        'debunk',
-        'pranks',
-        'retract'
-    ]
+lexicon=np.loadtxt("NRC-Emotion_Lexicon-Negative.txt",dtype=np.array)
+Lexicondic=np.column_stack((lexicon[:,0],lexicon[:,1].astype('int')))
+negdic=[Lexicondic[i,0] for i in range(Lexicondic.shape[0]) if Lexicondic[i,1]==1]
 
+
+def polarity_features(headlines, bodies):
     def calculate_polarity(text):
         tokens = get_tokenized_lemmas(text)
-        return sum([t in _refuting_words for t in tokens]) % 2
+        return sum([t in negdic for t in tokens]) % 2
+
     X = []
     for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
         clean_headline = clean(headline)
