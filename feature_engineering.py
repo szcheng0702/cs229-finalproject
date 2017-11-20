@@ -4,6 +4,7 @@ import nltk
 import numpy as np
 from sklearn import feature_extraction
 from tqdm import tqdm
+from nltk.corpus import wordnet as wn
 
 
 _wnl = nltk.WordNetLemmatizer()
@@ -50,6 +51,31 @@ def word_overlap_features(headlines, bodies):
         X.append(features)
     return X
 
+def synonym_set(word):
+    synonyms=[]
+    for syn in wn.synsets(word):
+        for l in syn.lemmas():
+            synonyms.append(l.name())
+    synonyms=set(synonyms)
+    return synonyms
+
+_refuting_words = [
+        'fake',
+        'fraud',
+        'hoax',
+        'false',
+        'deny', 'denies',
+        # 'refute',
+        'not',
+        'despite',
+        'nope',
+        'doubt', 'doubts',
+        'bogus',
+        'debunk',
+        'pranks',
+        'retract'
+    ]
+
 
 def refuting_features(headlines, bodies):
     _refuting_words = [
@@ -68,7 +94,8 @@ def refuting_features(headlines, bodies):
         'pranks',
         'retract'
     ]
-    X = []
+    X_ll = [list(synonym_set(word)) for word in _refuting_words]
+    X=[single_word for innerlist in X_ll for single_word in innerlist]
     for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
         clean_headline = clean(headline)
         clean_headline = get_tokenized_lemmas(clean_headline)
