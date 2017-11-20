@@ -165,25 +165,25 @@ def refuting_features(headlines, bodies):
     ]
 
 
-lexicon=np.loadtxt("NRC-Emotion_Lexicon-Negative.txt",dtype=np.array)
-Lexicondic=np.column_stack((lexicon[:,0],lexicon[:,1].astype('int')))
-negdic=[Lexicondic[i,0] for i in range(Lexicondic.shape[0]) if Lexicondic[i,1]==1]
-
-
-def polarity_features(headlines, bodies):
-    def calculate_polarity(text):
-        tokens = get_tokenized_lemmas(text)
-        return sum([t in negdic for t in tokens]) % 2
-
-    X = []
-    for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
-        clean_headline = clean(headline)
-        clean_body = clean(body)
-        features = []
-        features.append(calculate_polarity(clean_headline))
-        features.append(calculate_polarity(clean_body))
-        X.append(features)
-    return np.array(X)
+# lexicon=np.loadtxt("NRC-Emotion-Lexicon-Negative.txt",dtype=np.array)
+# Lexicondic=np.column_stack((lexicon[:,0],lexicon[:,1].astype('int')))
+# negdic=[Lexicondic[i,0] for i in range(Lexicondic.shape[0]) if Lexicondic[i,1]==1]
+#
+#
+# def polarity_features(headlines, bodies):
+#     def calculate_polarity(text):
+#         tokens = get_tokenized_lemmas(text)
+#         return sum([t in negdic for t in tokens]) % 2
+#
+#     X = []
+#     for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
+#         clean_headline = clean(headline)
+#         clean_body = clean(body)
+#         features = []
+#         features.append(calculate_polarity(clean_headline))
+#         features.append(calculate_polarity(clean_body))
+#         X.append(features)
+#     return np.array(X)
 
 def ngrams(input, n):
     input = input.split(' ')
