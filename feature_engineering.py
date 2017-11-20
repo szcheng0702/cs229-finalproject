@@ -4,6 +4,9 @@ import nltk
 import numpy as np
 from sklearn import feature_extraction
 from tqdm import tqdm
+from tosparse import toSparse
+from gensim.corpora import Dictionary
+from nltk.corpus import wordnet as wn
 
 
 _wnl = nltk.WordNetLemmatizer()
@@ -36,8 +39,6 @@ def gen_or_load_feats(feat_fn, headlines, bodies, feature_file):
     return np.load(feature_file)
 
 
-
-
 def word_overlap_features(headlines, bodies):
     X = []
     for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
@@ -49,6 +50,90 @@ def word_overlap_features(headlines, bodies):
             len(set(clean_headline).intersection(clean_body)) / float(len(set(clean_headline).union(clean_body)))]
         X.append(features)
     return X
+
+
+def word_overlap_features2(headlines, bodies):
+    vocabulary = Dictionary.load("Features_2/BOW vectors/dict.dict")
+    X = []
+    for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
+        clean_headline = clean(headline)
+        clean_body = clean(body)
+        clean_headline = get_tokenized_lemmas(clean_headline)
+        clean_body = get_tokenized_lemmas(clean_body)
+        features = set(clean_headline).intersection(clean_body)
+
+        f2 = vocabulary.doc2bow(features)
+        f = toSparse([f2], len(vocabulary.keys()))
+        X.append(f.getA()[0])
+
+    return X
+
+def word_overlap_bigrams(headlines, bodies):
+    vocabulary = Dictionary.load("Features_2/2grams vectors/dict.dict")
+    X = []
+    for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
+        clean_headline = clean(headline)
+        clean_body = clean(body)
+        clean_headline = get_tokenized_lemmas(clean_headline)
+        clean_body = get_tokenized_lemmas(clean_body)
+        features = set(clean_headline).intersection(clean_body)
+
+        f2 = vocabulary.doc2bow(features)
+        f = toSparse([f2], len(vocabulary.keys()))
+        X.append(f.getA()[0])
+
+    return X
+
+def synonym_antonym(headlines, bodies):
+    X = []
+    for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
+        synonym = 0
+        antonym = 0
+
+        clean_headline = clean(headline)
+        clean_body = clean(body)
+        clean_headline = get_tokenized_lemmas(clean_headline)
+        clean_body = get_tokenized_lemmas(clean_body)
+        for w1 in clean_headline:
+            for w2 in clean_body:
+                if is_synonym(w1, w2):
+                    synonym += 1
+                if is_antonym(w1, w2):
+                    antonym += 1
+
+        X.append([synonym,antonym])
+    return X
+
+
+def all_antonyms(word):
+    s1 = wn.synsets(word)
+    antonyms = []
+    for s in s1:
+        lemmas = s.lemmas()
+        for lemma in lemmas:
+            antonyms.extend([l.synset() for l in lemma.antonyms()])
+    return antonyms
+
+
+def is_antonym(word1, word2):
+    alist = all_antonyms(word1)
+    synsets = wn.synsets(word2)
+
+    for s in synsets:
+        if s in alist:
+            return True
+
+    return False
+
+def is_synonym(word1, word2):
+    synsets1 = wn.synsets(word1)
+    synsets2 = wn.synsets(word2)
+
+    for s in synsets2:
+        if s in synsets1:
+            return True
+
+    return False
 
 
 def refuting_features(headlines, bodies):
@@ -75,7 +160,6 @@ def refuting_features(headlines, bodies):
         features = [1 if word in clean_headline else 0 for word in _refuting_words]
         X.append(features)
     return X
-
 
 def polarity_features(headlines, bodies):
     _refuting_words = [
@@ -106,7 +190,6 @@ def polarity_features(headlines, bodies):
         features.append(calculate_polarity(clean_body))
         X.append(features)
     return np.array(X)
-
 
 def ngrams(input, n):
     input = input.split(' ')

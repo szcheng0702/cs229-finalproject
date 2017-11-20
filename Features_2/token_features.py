@@ -6,6 +6,7 @@ import os
 # Set input files and feature type
 if len(sys.argv) <= 1:
     output_dir = "BOW vectors"
+    n = 1
 else:
     if sys.argv[1] == "1":
         output_dir = "BOW vectors"
@@ -17,12 +18,12 @@ else:
         n = int(sys.argv[1])
 
 if len(sys.argv) <= 2:
-    body_file = "data/testbodyfile.csv"
+    body_file = "data/train_bodies.csv"
 else:
     body_file = sys.argv[2]
 
 if len(sys.argv) <= 3:
-    headline_file = "data/teststancefile.csv"
+    headline_file = "data/train_stances.csv"
 else:
     headline_file = sys.argv[3]
 

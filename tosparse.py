@@ -29,3 +29,7 @@ def toSparse(features, dictsize):
     sp_features=scipy.sparse.coo_matrix((data,(i_id,j_id)),shape=(len(features),dictsize)).todense()
 
     return sp_features
+
+m = toSparse(features, 3)
+print(m)
+print(m.getA()[0])

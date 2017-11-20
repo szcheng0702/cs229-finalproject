@@ -32,7 +32,6 @@ def generate_features(stances, dataset, name):
     X = np.c_[X_hand, X_polarity, X_refuting, X_overlap]
     return X, y
 
-
 if __name__ == "__main__":
     check_version()
     parse_params()
