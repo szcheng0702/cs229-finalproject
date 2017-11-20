@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     #Load the training dataset and generate folds
     d = DataSet()
-    folds,hold_out = kfold_split(d,n_folds=10)
+    folds,hold_out = kfold_split(d,n_folds=2)
     fold_stances, hold_out_stances = get_stances_for_folds(d,folds,hold_out)
 
 
