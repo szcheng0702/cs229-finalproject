@@ -5,6 +5,12 @@ import numpy as np
 from sklearn import feature_extraction
 from tqdm import tqdm
 
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import cosine_similarity
+
+import string
+
 
 _wnl = nltk.WordNetLemmatizer()
 
@@ -77,15 +83,26 @@ def refuting_features(headlines, bodies):
     return X
 
 
-lexicon=np.loadtxt("NRC-Emotion-Lexicon-Negative.txt",dtype=np.ndarray)
-Lexicondic=np.column_stack((lexicon[:,0],lexicon[:,1].astype('int')))
-negdic=[Lexicondic[i,0] for i in range(Lexicondic.shape[0]) if Lexicondic[i,1]==1] ##dictionary of negative words
-
-#new polarity_features def
 def polarity_features(headlines, bodies):
+    _refuting_words = [
+        'fake',
+        'fraud',
+        'hoax',
+        'false',
+        'deny', 'denies',
+        'not',
+        'despite',
+        'nope',
+        'doubt', 'doubts',
+        'bogus',
+        'debunk',
+        'pranks',
+        'retract'
+    ]
+
     def calculate_polarity(text):
         tokens = get_tokenized_lemmas(text)
-        return sum([t in negdic for t in tokens]) % 2
+        return sum([t in _refuting_words for t in tokens]) % 2
     X = []
     for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
         clean_headline = clean(headline)
@@ -188,9 +205,38 @@ def hand_features(headlines, bodies):
         features = append_ngrams(features, clean_headline, clean_body, 6)
         return features
 
+
+    def similarity(headline, body):
+
+        # nltk.download('punkt')  # if necessary...
+
+        stemmer = nltk.stem.porter.PorterStemmer()
+        remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
+
+        def stem_tokens(tokens):
+            return [stemmer.stem(item) for item in tokens]
+
+        '''remove punctuation, lowercase, stem'''
+
+        def normalize(text):
+            return stem_tokens(nltk.word_tokenize(text.lower().translate(remove_punctuation_map)))
+
+        vectorizer = TfidfVectorizer(tokenizer=normalize, stop_words='english')
+
+        def cosine_sim(text1, text2):
+            tfidf = vectorizer.fit_transform([text1, text2])
+            return ((tfidf * tfidf.T).A)[0, 1]
+
+        result = cosine_sim(headline, body)
+        # print ("result is ")
+        # print (result)
+
+        return [result]
+
+
     X = []
     for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
-        X.append(binary_co_occurence(headline, body)
+        X.append(binary_co_occurence(headline, body) + similarity(headline, body)
                  + binary_co_occurence_stops(headline, body)
                  + count_grams(headline, body))
 
