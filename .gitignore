@@ -7,10 +7,9 @@ __pycache__/
 .idea
 
 # OS generated files
-<<<<<<< HEAD
-*.DS_Store
-=======
 */.DS_Store
 
 features
->>>>>>> cf8ceefb529226fcee3e2e42e61052dfc7a35c80
+
+.DS_Store
+
