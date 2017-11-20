@@ -165,10 +165,9 @@ def refuting_features(headlines, bodies):
     ]
 
 
-lexicon=np.loadtxt("NRC-Emotion_Lexicon-Negative.txt",dtype=np.array)
+lexicon=np.loadtxt("NRC-Emotion-Lexicon-Negative.txt",dtype=np.ndarray)
 Lexicondic=np.column_stack((lexicon[:,0],lexicon[:,1].astype('int')))
 negdic=[Lexicondic[i,0] for i in range(Lexicondic.shape[0]) if Lexicondic[i,1]==1]
-
 
 def polarity_features(headlines, bodies):
     def calculate_polarity(text):
