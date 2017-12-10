@@ -7,9 +7,11 @@ from feature_engineering import word_overlap_features
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
 from utils.score import report_score, LABELS, score_submission
-
+from sklearn.neural_network import MLPClassifier
 from utils.system import parse_params, check_version
 from sklearn.naive_bayes import MultinomialNB
+from sklearn import linear_model
+from sklearn.ensemble import GradientBoostingClassifier
 
 
 def generate_features(stances, dataset, name):
@@ -51,25 +53,58 @@ if __name__ == "__main__":
         Xs[fold], ys[fold] = generate_features(fold_stances[fold], d, str(fold))
 
     best_score = 0
-    best_fold = None
+    best_model1 = None
 
     # Classifier for each fold
     for fold in fold_stances:
         ids = list(range(len(folds)))
         del ids[fold]
 
-        X_train = np.vstack(tuple([Xs[i] for i in ids]))
-        y_train = np.hstack(tuple([ys[i] for i in ids]))
-        print(y_train.shape)
+        X_train_list = [Xs[i] for i in ids]
+        X_train = np.vstack(tuple(X_train_list))
+        y_train_list = [ys[i] for i in ids]
+
+        y_related = []
+        for item in y_train_list:
+            current = []
+            y_related.append(current)
+            for stance in item:
+                if stance == 3:
+                    current.append(3)
+                else:
+                    current.append(2)
+
+        y_train = np.hstack(tuple(y_related))
 
         X_test = Xs[fold]
         y_test = ys[fold]
 
-        # Linear
-        clf = MultinomialNB()
-        clf.fit(X_train, y_train)
+        # Model 1: Classify Related and Unrelated
+        model1 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
+        model1.fit(X_train, y_train)
 
-        predicted = [LABELS[int(a)] for a in clf.predict(X_test)]
+        x_attitude = []
+        y_attitude = []
+        y_train = np.hstack(tuple(y_train_list))
+        for index, item in enumerate(list(y_train)):
+            if item != 3:
+                y_attitude.append(item)
+                x_attitude.append(X_train[index])
+
+        x_attitude = np.array(x_attitude)
+        y_attitude = np.array(y_attitude)
+
+        # Model 2: Classify Agree, Disagree, and Discuss
+        model2 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
+        model2.fit(x_attitude, y_attitude)
+
+        # prediction
+        results = model1.predict(X_test)
+        for index, item in enumerate(list(results)):
+            if item!=3:
+                results[index] = model2.predict(np.array(X_test[index]).reshape(1, -1))
+
+        predicted = [LABELS[int(a)] for a in results]
         actual = [LABELS[int(a)] for a in y_test]
 
         fold_score, _ = score_submission(actual, predicted)
@@ -80,10 +115,16 @@ if __name__ == "__main__":
         print("Score for fold " + str(fold) + " was - " + str(score))
         if score > best_score:
             best_score = score
-            best_fold = clf
+            best_model1 = model1
+            best_model2 = model2
 
     # Run on Holdout set and report the final score on the holdout set
-    predicted = [LABELS[int(a)] for a in best_fold.predict(X_holdout)]
+    h_results = best_model1.predict(X_holdout)
+    for index, item in enumerate(list(h_results)):
+        if item != 3:
+            h_results[index] = best_model2.predict(np.array(X_holdout[index]).reshape(1, -1))
+
+    predicted = [LABELS[int(a)] for a in h_results]
     actual = [LABELS[int(a)] for a in y_holdout]
 
     print("Scores on the dev set")
@@ -92,7 +133,12 @@ if __name__ == "__main__":
     print("")
 
     # Run on competition dataset
-    predicted = [LABELS[int(a)] for a in best_fold.predict(X_competition)]
+    t_results = best_model1.predict(X_competition)
+    for index, item in enumerate(list(t_results)):
+        if item != 3:
+            t_results[index] = best_model2.predict(np.array(X_competition[index]).reshape(1, -1))
+
+    predicted = [LABELS[int(a)] for a in t_results]
     actual = [LABELS[int(a)] for a in y_competition]
 
     print("Scores on the test set")

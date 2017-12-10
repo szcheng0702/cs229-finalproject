@@ -29,11 +29,11 @@ def generate_features(stances, dataset, name):
         b.append(dataset.articles[stance['Body ID']])
 
     X_overlap = gen_or_load_feats(word_overlap_features2, h, b, "features/overlap." + name + ".npy")
-    # X_refuting = gen_or_load_feats(refuting_features, h, b, "features/refuting." + name + ".npy")
+    X_refuting = gen_or_load_feats(refuting_features, h, b, "features/refuting." + name + ".npy")
     X_polarity = gen_or_load_feats(polarity_features, h, b, "features/polarity." + name + ".npy")
     X_hand = gen_or_load_feats(hand_features, h, b, "features/hand." + name + ".npy")
 
-    X = np.c_[X_overlap, X_hand, X_polarity]
+    X = np.c_[X_overlap, X_hand, X_refuting, X_polarity]
     return X, y
 
 
