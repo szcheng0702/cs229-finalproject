@@ -1,5 +1,7 @@
-# this file implements Naive Bayes
-# data input and output portions here are handled by the baseline code provided by http://www.fakenewschallenge.org
+# Three models are used to classify stances
+# Model 1 classifies related and unrelated stances
+# For related stances, Model 2 classifies whether a stance is discuss or not
+# For non-neutral stance, Model 3 classifies whether a stance is agree or disagree
 
 import numpy as np
 from feature_engineering import refuting_features, polarity_features,hand_features, gen_or_load_feats
@@ -108,7 +110,7 @@ if __name__ == "__main__":
         y_ad = []
         y_train = np.hstack(tuple(y_train_list))
         for index, item in enumerate(list(y_train)):
-            if item != 2:
+            if item != 2 and item != 3:
                 y_ad.append(item)
                 x_ad.append(X_train[index])
 
