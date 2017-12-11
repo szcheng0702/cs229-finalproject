@@ -102,7 +102,7 @@ if __name__ == "__main__":
         y_train = np.hstack(tuple(y_related))
 
         # Model 1: Classify Related and Unrelated
-        model1 = linear_model.LogisticRegression()
+        model1 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
         model1.fit(X_train, y_train)
 
 

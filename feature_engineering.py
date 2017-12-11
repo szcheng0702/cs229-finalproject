@@ -175,8 +175,6 @@ def refuting_features(headlines, bodies):
     return X
 
 
-
-
 lexicon=np.loadtxt("NRC-Emotion-Lexicon-Negative.txt",dtype=np.ndarray)
 Lexicondic=np.column_stack((lexicon[:,0],lexicon[:,1].astype('int')))
 negdic=[Lexicondic[i,0] for i in range(Lexicondic.shape[0]) if Lexicondic[i,1]==1]

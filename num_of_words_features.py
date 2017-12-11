@@ -8,7 +8,7 @@ from sklearn.svm import SVC
 from sklearn.svm import LinearSVC
 from sklearn.ensemble import GradientBoostingClassifier
 from feature_engineering import refuting_features, polarity_features, hand_features, gen_or_load_feats
-from feature_engineering import word_overlap_features2, word_overlap_bigrams
+from feature_engineering import word_overlap_features2, word_overlap_features
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
 from utils.score import report_score, LABELS, score_submission
@@ -28,10 +28,11 @@ def generate_features(stances, dataset, name):
         h.append(stance['Headline'])
         b.append(dataset.articles[stance['Body ID']])
 
-    X_overlap = gen_or_load_feats(word_overlap_features2, h, b, "features/overlap." + name + ".npy")
+    X_overlap = gen_or_load_feats(word_overlap_features, h, b, "features/overlap." + name + ".npy")
     X_refuting = gen_or_load_feats(refuting_features, h, b, "features/refuting." + name + ".npy")
     X_polarity = gen_or_load_feats(polarity_features, h, b, "features/polarity." + name + ".npy")
     X_hand = gen_or_load_feats(hand_features, h, b, "features/hand." + name + ".npy")
+    X_overlap2 = gen_or_load_feats(word_overlap_features2, h, b, "features/overlap." + name + ".npy")
 
     X = np.c_[X_overlap, X_hand, X_refuting, X_polarity]
     return X, y

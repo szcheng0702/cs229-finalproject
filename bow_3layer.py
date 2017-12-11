@@ -32,7 +32,7 @@ def generate_features(stances, dataset, name):
     X = np.c_[X_hand, X_refuting, X_polarity, X_overlap]
     return X, y
 
-def generate_features_third_layer(stances, dataset, name):
+def generate_features_add_bow(stances, dataset, name):
     h, b, y = [], [], []
 
     for stance in stances:
@@ -61,18 +61,18 @@ if __name__ == "__main__":
     # Load the competition dataset
     competition_dataset = DataSet("competition_test")
     X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset, "competition")
-    X_competition3, _ = generate_features_third_layer(competition_dataset.stances, competition_dataset, "competition")
+    X_competition_add_bow, _ = generate_features_add_bow(competition_dataset.stances, competition_dataset, "competition")
 
     Xs = dict()
     ys = dict()
-    Xs3 = dict()
+    Xs_bow = dict()
 
     # Load/Precompute all features now
     X_holdout, y_holdout = generate_features(hold_out_stances, d, "holdout")
-    X_holdout3, _ = generate_features_third_layer(hold_out_stances, d, "holdout")
+    X_holdout_add_bow, _ = generate_features_add_bow(hold_out_stances, d, "holdout")
     for fold in fold_stances:
         Xs[fold], ys[fold] = generate_features(fold_stances[fold], d, str(fold))
-        Xs3[fold], _ = generate_features_third_layer(fold_stances[fold], d, str(fold))
+        Xs_bow[fold], _ = generate_features_add_bow(fold_stances[fold], d, str(fold))
 
     best_score = 0
     best_model1 = None
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         ids = list(range(len(folds)))
         del ids[fold]
 
-        X_train = np.vstack(tuple([Xs[i] for i in ids]))
+        X_train = np.vstack(tuple([Xs_bow[i] for i in ids]))
         y_train_list = [ys[i] for i in ids]
 
         y_related = []
@@ -98,11 +98,12 @@ if __name__ == "__main__":
         y_train = np.hstack(tuple(y_related))
 
         # First Model: Classify related and unrelated
-        model1 = linear_model.LogisticRegression()
+        #model1 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
         # model1 = MultinomialNB()
-        # model1 = linear_model.LogisticRegression()
+        model1 = linear_model.LogisticRegression()
         model1.fit(X_train, y_train)
 
+        X_train2 = np.vstack(tuple([Xs[i] for i in ids]))
         x_attitude = []
         y_attitude = []
         y_train = np.hstack(tuple(y_train_list))
@@ -112,25 +113,25 @@ if __name__ == "__main__":
                     y_attitude.append(2)
                 else:
                     y_attitude.append(1)
-                x_attitude.append(X_train[index])
+                x_attitude.append(X_train2[index])
 
         x_attitude = np.array(x_attitude)
         y_attitude = np.array(y_attitude)
 
         # Second Model: Classify Having Attitude(Agree or Disagree) or Neural
-        # model2 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
-        model2 = linear_model.LogisticRegression()
+        model2 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
+        #model2 = MultinomialNB()
         model2.fit(x_attitude, y_attitude)
 
 
-        X_train3 = np.vstack(tuple([Xs3[i] for i in ids]))
         x_ad = []
         y_ad = []
+        X_train = np.vstack(tuple([Xs[i] for i in ids]))
         y_train = np.hstack(tuple(y_train_list))
         for index, item in enumerate(list(y_train)):
             if item != 2 and item != 3:
                 y_ad.append(item)
-                x_ad.append(X_train3[index])
+                x_ad.append(X_train[index])
 
         x_ad = np.array(x_ad)
         y_ad = np.array(y_ad)
@@ -146,14 +147,14 @@ if __name__ == "__main__":
         # prediction
         X_test = Xs[fold]
         y_test = ys[fold]
-        results = model1.predict(X_test)
+        X_test_bow = Xs_bow[fold]
+        results = model1.predict(X_test_bow)
 
-        X_test3 = Xs3[fold]
         for index, item in enumerate(list(results)):
             if item!=3:
                 results[index] = model2.predict(np.array(X_test[index]).reshape(1, -1))
                 if results[index]!=2:
-                    results[index] = model3.predict(np.array(X_test3[index]).reshape(1, -1))
+                    results[index] = model3.predict(np.array(X_test[index]).reshape(1, -1))
 
         predicted = [LABELS[int(a)] for a in results]
         actual = [LABELS[int(a)] for a in y_test]
@@ -171,12 +172,12 @@ if __name__ == "__main__":
             best_model3 = model3
 
     # Run on Holdout set and report the final score on the holdout set
-    h_results = best_model1.predict(X_holdout)
+    h_results = best_model1.predict(X_holdout_add_bow)
     for index, item in enumerate(list(h_results)):
         if item != 3:
             h_results[index] = best_model2.predict(np.array(X_holdout[index]).reshape(1, -1))
             if h_results[index] !=2:
-                h_results[index] = best_model3.predict(np.array(X_holdout3[index]).reshape(1, -1))
+                h_results[index] = best_model3.predict(np.array(X_holdout[index]).reshape(1, -1))
 
     predicted = [LABELS[int(a)] for a in h_results]
     actual = [LABELS[int(a)] for a in y_holdout]
@@ -187,12 +188,12 @@ if __name__ == "__main__":
     print("")
 
     # Run on competition dataset
-    t_results = best_model1.predict(X_competition)
+    t_results = best_model1.predict(X_competition_add_bow)
     for index, item in enumerate(list(t_results)):
         if item != 3:
             t_results[index] = best_model2.predict(np.array(X_competition[index]).reshape(1, -1))
             if t_results[index] != 2:
-                t_results[index] = best_model3.predict(np.array(X_competition3[index]).reshape(1, -1))
+                t_results[index] = best_model3.predict(np.array(X_competition[index]).reshape(1, -1))
 
     predicted = [LABELS[int(a)] for a in t_results]
     actual = [LABELS[int(a)] for a in y_competition]
