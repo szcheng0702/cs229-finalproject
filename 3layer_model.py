@@ -82,9 +82,9 @@ if __name__ == "__main__":
         y_test = ys[fold]
 
         # First Model: Classify related and unrelated
-        model1 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
+        #model1 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
         # model1 = MultinomialNB()
-        # model1 = linear_model.LogisticRegression()
+        model1 = linear_model.LogisticRegression()
         model1.fit(X_train, y_train)
 
         x_attitude = []
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
         # Second Model: Classify Having Attitude(Agree or Disagree) or Neural
         # model2 = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
-        model2 = MultinomialNB()
+        model2 = linear_model.LogisticRegression()
         model2.fit(x_attitude, y_attitude)
 
         x_ad = []
