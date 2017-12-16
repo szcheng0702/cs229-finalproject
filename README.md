@@ -5,7 +5,7 @@ Author names are listed alphabetically. All authors contribute equally.
 
 This code accompanies our paper [Fake News Stance Detection](/fakenews.pdf).
 
-The current project uses the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) and the [dataset](https://github.com/FakeNewsChallenge/fnc-1) provided by FNC-1. 
+The current project uses the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) and the [dataset](https://github.com/FakeNewsChallenge/fnc-1) provided by the Fake News Challenge ([FNC-1](http://www.fakenewschallenge.org)). 
 
 
 ## Introduction
@@ -14,7 +14,7 @@ In this work, multiple machine learning methods are employed to detect the stanc
 on their bodies, which can serve as an important indication of content authenticity. 
 
 The stance of a headline is compared to its news body from a data set provided 
-by Fake News Challenge ([FNC-1](http://www.fakenewschallenge.org)). Each data instance consists of headline, body and
+by FNC-1. Each data instance consists of headline, body and
 stance. Each stance is one of the {unrelated, discuss, agree, disagree}. 
 An example instance is shown below. 40350, 9622, and 25413 instances are randomly
  selected as the training, dev, and test sets, respectively. 
@@ -22,7 +22,7 @@ An example instance is shown below. 40350, 9622, and 25413 instances are randoml
  first extracted out. Multiple learning models are used to predict the 
  stance given a headline/body pair.
 
-Example Data Instance
+**Example Data Instance**
 
 **Headline:**  Man discovers spider living under his skin during Bali vacation
 
@@ -110,7 +110,7 @@ is a weighted accuracy score, with 25% weight on correctly classifying “relate
 |  discuss      |    122        |     0         |   3555        |   787         |
 | unrelated     |    7          |     0         |   168         |   18174       |
 
-Score: 8711.0 out of 11651.25	(74.76451024568179%)
+Score: 8711.0 out of 11651.25	(74.76%)
 
 
 #### Dev Set
@@ -122,4 +122,4 @@ Score: 8711.0 out of 11651.25	(74.76451024568179%)
 |  discuss      |    49         |     1         |   1483        |    267        |
 | unrelated     |     1         |     0         |    37         |   6860        |
 
-Score: 3460.25 out of 4448.5	(77.78464651005957%)
+Score: 3460.25 out of 4448.5	(77.78%)
