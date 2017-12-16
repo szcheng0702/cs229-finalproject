@@ -63,7 +63,7 @@ def synonym_set(word):
     return synonyms
 
 
-def word_overlap_features2(headlines, bodies):
+def bow_overlap_features(headlines, bodies):
     vocabulary = Dictionary.load("Features_2/BOW vectors/dict.dict")
     X = []
     for i, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):

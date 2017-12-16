@@ -4,7 +4,7 @@
 
 import numpy as np
 from feature_engineering import refuting_features, polarity_features,hand_features, gen_or_load_feats
-from feature_engineering import word_overlap_features, word_overlap_features2
+from feature_engineering import word_overlap_features, bow_overlap_features
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
 from utils.score import report_score, LABELS, score_submission
@@ -43,7 +43,7 @@ def generate_features_second_layer(stances, dataset, name):
     X_refuting = gen_or_load_feats(refuting_features, h, b, "features/refuting." + name + ".npy")
     X_polarity = gen_or_load_feats(polarity_features, h, b, "features/polarity." + name + ".npy")
     X_hand = gen_or_load_feats(hand_features, h, b, "features/hand." + name + ".npy")
-    X_overlap2 = gen_or_load_feats(word_overlap_features2, h, b, "features/bow_overlap." + name + ".npy")
+    X_overlap2 = gen_or_load_feats(bow_overlap_features, h, b, "features/bow_overlap." + name + ".npy")
 
     X = np.c_[X_hand, X_refuting, X_polarity, X_overlap, X_overlap2]
     return X, y
