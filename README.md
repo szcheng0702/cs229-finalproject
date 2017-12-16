@@ -37,8 +37,7 @@ The current project uses the [baseline code](https://github.com/FakeNewsChalleng
 - [NumPy 1.13.3](http://www.numpy.org)
 - [Scikit-Learn](http://scikit-learn.org/stable/)
 ## Features
-Feature-related methods are included in the feature_engineering file 
-To generate a specific feature for the data set, use the following method:
+Feature-related methods are included in the feature_engineering file. To generate a specific feature for the data set, use the following method:
 ```python
 from feature_engineering import feature_method, gen_or_load_feats
 from utils.score import LABELS
