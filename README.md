@@ -21,14 +21,31 @@ An example instance is shown below. 40350, 9622, and 25413 instances are randoml
 
 Example Data Instance
 
-**Headline:** It Begins: HazMat-Wearing Passenger Spotted At Airport
+**Headline:**  Man discovers spider living under his skin during Bali vacation
 
 **Body:** 
-Last week we hinted at what was to come as Ebola fears spread across America. Today, we get confirmation. As The Daily Caller reports, one passenger at Dulles International Airport outside Washington, D.C. is apparently not taking any chances. A female passenger dressed in a hazmat suit - complete with a full body gown, mask and gloves - was spotted Wednesday waiting for a flight at the airport.
 
-**Stance:** discuss
+Fear not arachnophobes, the story of Bunbury's ""spiderman"" might not be all it seemed.
 
-The current project uses the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) provided by FNC-1. 
+Perth scientists have cast doubt over claims that a spider burrowed into a man's body during his first trip to Bali. The story went global on Thursday, generating hundreds of stories online.
+
+Earlier this month, Dylan Thomas headed to the holiday island and sought medical help after experiencing ""a really burning sensation like a searing feeling"" in his abdomen.
+
+Dylan Thomas says he had a spider crawl underneath his skin. 
+
+Dylan Thomas says he had a spider crawl underneath his skin.
+
+Mr Thomas said a specialist dermatologist later used tweezers to remove what was believed to be a ""tropical spider"".
+
+But it seems we may have all been caught in a web... of misinformation.
+
+Arachnologist Dr Volker Framenau said whatever the creature was, it was ""almost impossible"" for the culprit to have been a spider.
+
+...
+
+**Stance:** Disagree
+
+The current project uses the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) and the [dataset](https://github.com/FakeNewsChallenge/fnc-1) provided by FNC-1. 
 
 ## Requirements
 - [Python 3.6](https://www.python.org/downloads/)
