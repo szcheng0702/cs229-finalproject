@@ -28,7 +28,7 @@ Last week we hinted at what was to come as Ebola fears spread across America. To
 
 **Stance:** discuss
 
-The current repository used the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) provided by FNC-1. 
+The current project uses the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) provided by FNC-1. 
 
 ## Requirements
 - [Python 3.6](https://www.python.org/downloads/)
@@ -92,6 +92,7 @@ is a weighted accuracy score, with 25% weight on correctly classifying “relate
 | disagree      |    26         |     0         |   383         |   289         |
 |  discuss      |    122        |     0         |   3555        |   787         |
 | unrelated     |    7          |     0         |   168         |   18174       |
+
 Score: 8711.0 out of 11651.25	(74.76451024568179%)
 
 
@@ -103,4 +104,5 @@ Score: 8711.0 out of 11651.25	(74.76451024568179%)
 | disagree      |    16         |     0         |    126        |    20         |
 |  discuss      |    49         |     1         |   1483        |    267        |
 | unrelated     |     1         |     0         |    37         |   6860        |
+
 Score: 3460.25 out of 4448.5	(77.78464651005957%)
