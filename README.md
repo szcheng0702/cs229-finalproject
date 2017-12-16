@@ -5,6 +5,9 @@ Author names are listed alphabetically. All authors contribute equally.
 
 This code accompanies our paper [Fake News Stance Detection](/fakenews.pdf).
 
+The current project uses the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) and the [dataset](https://github.com/FakeNewsChallenge/fnc-1) provided by FNC-1. 
+
+
 ## Introduction
 
 In this work, multiple machine learning methods are employed to detect the stance of newspaper headlines 
@@ -44,8 +47,6 @@ Arachnologist Dr Volker Framenau said whatever the creature was, it was ""almost
 ...
 
 **Stance:** Disagree
-
-The current project uses the [baseline code](https://github.com/FakeNewsChallenge/fnc-1-baseline) and the [dataset](https://github.com/FakeNewsChallenge/fnc-1) provided by FNC-1. 
 
 ## Requirements
 - [Python 3.6](https://www.python.org/downloads/)
