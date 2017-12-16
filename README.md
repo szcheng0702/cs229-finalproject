@@ -82,8 +82,8 @@ is a weighted accuracy score, with 25% weight on correctly classifying “relate
  stances, which includes “agree”, “disagree” and “discuss”,  and “unrelated” 
  stances,  and 75% weight on correctly classifying three “related” stances. 
 
-#### Example Output:
-##### Test Set
+### Example Output:
+#### Test Set
 
 |               | agree         | disagree      | discuss       | unrelated     |
 |-----------    |-------        |----------     |---------      |-----------    |
@@ -95,7 +95,7 @@ is a weighted accuracy score, with 25% weight on correctly classifying “relate
 Score: 8711.0 out of 11651.25	(74.76451024568179%)
 
 
-##### Dev Set
+#### Dev Set
 
 |               | agree         | disagree      | discuss       | unrelated     |
 |-----------    |-------        |----------     |---------      |-----------    |
